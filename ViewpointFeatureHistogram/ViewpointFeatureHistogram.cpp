@@ -60,8 +60,31 @@ int main (int argc, char** argv)
   // Display and retrieve the shape context descriptor vector for the 0th point.
   pcl::VFHSignature308 descriptor = vfhFeatures->points[0];
   VFHEstimationType::PointCloudOut::PointType descriptor2 = vfhFeatures->points[0];
-  std::cout << "VFH 1:" << descriptor << std::endl;
-	std::cout << "VFH 2:" << descriptor2 << std::endl;
+  std::cout << "VFH:" << descriptor << std::endl;
+  std::cout << "Numero de Elementos del VFH = " << sizeof(descriptor.histogram)/sizeof(descriptor.histogram[0]) << std::endl;
 
 
 	// Create *_vfh.pcd file
+	std::stringstream vfh_file;
+	vfh_file << "# .PCD v.6 - Point Cloud Data file format" << std::endl;
+	vfh_file << "FIELDS vfh" << std::endl;
+	vfh_file << "SIZE 4" << std::endl;
+	vfh_file << "TYPE F" << std::endl;
+	vfh_file << "COUNT 308" << std::endl;
+	vfh_file << "WIDTH 1" << std::endl;
+	vfh_file << "HEIGHT 1" << std::endl;
+	vfh_file << "POINTS 1" << std::endl;
+	vfh_file << "DATA ascii" << std::endl;
+	int vfh_length = sizeof(descriptor.histogram)/sizeof(descriptor.histogram[0]); 
+	for (int i = 0; i < vfh_length; i++)
+	{
+		vfh_file << descriptor.histogram[i] << " ";
+	}
+
+	std::ofstream outFile;
+	outFile.open("Prueba_vfh.pcd");
+	outFile << vfh_file.str();
+	outFile.close();
+
+  return 0;
+}
